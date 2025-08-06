@@ -9,7 +9,7 @@
 ### 软件依赖
 - Python 3.7+
 - VCV Rack
-- BlackHole 2ch (音频虚拟设备)
+- BlackHole 16ch (音频虚拟设备，推荐) 或 BlackHole 2ch
 
 ### Python包
 ```bash
@@ -19,17 +19,22 @@ pip install sounddevice python-osc pyyaml numpy
 ## 2. 音频设备配置
 
 ### BlackHole设置
-1. 确保BlackHole 2ch已安装并启用
+1. 确保BlackHole 16ch已安装并启用（推荐使用16通道版本）
 2. 在系统音频设置中将BlackHole设为输入设备
 3. 将音频源（如音乐播放器）输出到BlackHole
+4. 如果使用BlackHole 2ch，请相应调整配置文件中的通道数
 
 ### 测试音频输入
 ```bash
+# 测试 BlackHole 16ch 设备
+python test_blackhole_16ch.py
+
+# 运行主程序
 python main.py
 ```
 应该看到类似输出：
 ```
-响度: [0.123 0.456], 估计位置: [45.2  12.3]
+响度: [0.123 0.456 0.789 ...], 估计位置: [45.2  12.3]
 ```
 
 ## 3. VCV Rack配置

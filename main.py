@@ -40,16 +40,16 @@ def main():
 
     print("\n开始采集与定位，按 Ctrl+C 退出")
     print("请确保:")
-    print("1. BlackHole 2ch 设备正在接收音频")
+    print("1. BlackHole 16ch 设备正在接收音频")
     print("2. VCV Rack 已启动并配置了OSC接收模块")
-    print("3. VCV Rack 监听端口 7000")
+    print("3. VCV Rack 监听端口 7001")
 
     try:
         while True:
             audio_chunk = audio_stream.get_audio_chunk()  # (channels, samples)
             rms = compute_rms(audio_chunk)                # (channels,)
             pos = estimate_position(rms, mic_positions)  # (2,)
-
+            
             print(f"响度: {rms.round(3)}, 估计位置: {pos.round(3)}")
             osc_sender.send_position(pos[0], pos[1])
     except KeyboardInterrupt:

@@ -1,28 +1,27 @@
 # 麦克风坐标配置（单位：厘米）
-# 注意：当前系统只有2个输入通道，所以只使用前2个麦克风
+# 使用BlackHole 16ch设备，但只使用前6个通道（对应6个麦克风）
 mics:
   - id: 0
     position: [0, 0]        # 左上角
   - id: 1
     position: [117, 0]      # 右上角
-  # 以下麦克风暂时注释掉，因为系统只有2个输入通道
-  # - id: 2
-  #   position: [0, 68]       # 左下角
-  # - id: 3
-  #   position: [117, 68]     # 右下角
-  # - id: 4
-  #   position: [58.5, 0]     # 上中点
-  # - id: 5
-  #   position: [58.5, 68]    # 下中点
+  - id: 2
+    position: [0, 68]       # 左下角
+  - id: 3
+    position: [117, 68]     # 右下角
+  - id: 4
+    position: [58.5, 0]     # 上中点
+  - id: 5
+    position: [58.5, 68]    # 下中点
 
 # 音频设备配置
-device_id: 0                # 使用 BlackHole 2ch 设备，支持2个通道
+device_id: 1                # 使用 BlackHole 16ch 设备
 sample_rate: 44100
-channels: 2                 # 修改为2个通道
+channels: 6                 # 只使用6个通道
 chunk_duration: 0.1        # 采样时长（秒）
 
 # VCV Rack OSC配置
 osc:
   ip: "127.0.0.1"          # VCV Rack默认监听本地地址
-  port: 7000               # VCV Rack默认OSC端口
+  port: 7001               # cvOSCcv模块监听端口
   address: "/position"     # OSC地址
