@@ -33,6 +33,47 @@ class TempoMapper:
         self.rms_history = []
         self.intensity_history = []
         
+    def map_intensity_to_0_100(self, intensity):
+        """
+        将强度值映射到0-100范围，使用超高对比度映射放大通道差异
+        """
+        if intensity <= 0:
+            return 0.0
+        
+        # 使用超高对比度映射函数
+        # 对于很小的值，使用指数放大
+        if intensity < 0.001:
+            # 使用指数函数放大差异
+            mapped_value = np.power(intensity * 1000, 0.25) * 25
+            return min(100.0, mapped_value)
+        
+        # 对于小值，使用幂函数映射
+        elif intensity < 0.01:
+            # 使用幂函数让差异更明显
+            mapped_value = np.power(intensity * 100, 0.35) * 45
+            return min(100.0, mapped_value)
+        
+        # 对于中等值，使用分段线性映射
+        elif intensity < 0.1:
+            # 将0.01-0.1映射到45-85，使用分段函数
+            if intensity < 0.05:
+                # 0.01-0.05映射到45-65
+                normalized = (intensity - 0.01) / 0.04
+                mapped_value = 45 + normalized * 20
+            else:
+                # 0.05-0.1映射到65-85
+                normalized = (intensity - 0.05) / 0.05
+                mapped_value = 65 + normalized * 20
+            return min(100.0, mapped_value)
+        
+        # 对于大值，使用超高对比度线性映射
+        else:
+            # 将0.1-1.0映射到85-100，让高值差异更明显
+            normalized = (intensity - 0.1) / 0.9
+            # 使用立方根函数让高值差异更明显
+            mapped_value = 85 + (normalized ** 0.33) * 15
+            return min(100.0, mapped_value)
+    
     def calculate_intensity(self, rms_values):
         """
         计算声音强度指标
@@ -58,7 +99,7 @@ class TempoMapper:
     
     def update_bpm(self, rms_values):
         """
-        更新BPM值
+        更新BPM值，同时返回映射后的响度值(0-100)
         """
         current_time = time.time()
         dt = current_time - self.last_update_time
@@ -66,6 +107,9 @@ class TempoMapper:
         
         # 计算当前强度
         intensity = self.calculate_intensity(rms_values)
+        
+        # 映射到0-100范围
+        mapped_intensity = self.map_intensity_to_0_100(intensity)
         
         # 更新历史记录
         self.rms_history.append(np.mean(rms_values))
@@ -79,8 +123,8 @@ class TempoMapper:
         
         # 计算目标BPM
         if intensity < self.silence_threshold:
-            # 静音状态，快速归零
-            target_bpm = 0
+            # 静音状态，缓慢下降到最小BPM而不是归零
+            target_bpm = self.min_bpm
             decay_rate = self.silence_decay_rate
         else:
             # 根据强度计算目标BPM
@@ -109,7 +153,7 @@ class TempoMapper:
             # 下降时使用decay_rate
             self.current_bpm += (target_bpm - self.current_bpm) * decay_rate
         
-        return self.current_bpm
+        return self.current_bpm, mapped_intensity
     
     def get_bpm(self):
         """获取当前BPM值"""

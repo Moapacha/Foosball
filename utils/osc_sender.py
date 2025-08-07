@@ -1,11 +1,13 @@
 from pythonosc.udp_client import SimpleUDPClient
 
 class OSCSender:
-    def __init__(self, ip="127.0.0.1", port=11111):
+    def __init__(self, ip="127.0.0.1", port=11111, position_ip="127.0.0.1", position_port=11112):
         self.client = SimpleUDPClient(ip, port)
+        self.position_client = SimpleUDPClient(position_ip, position_port)
 
     def send_position(self, x, y):
-        self.client.send_message("/position", [float(x), float(y)])
+        """发送位置估计到独立端口"""
+        self.position_client.send_message("/position", [float(x), float(y)])
 
     def send_full_status(self, rms_values, x, y, goal_detection, bpm):
         """

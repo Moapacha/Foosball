@@ -19,7 +19,7 @@ mics:
     position: [117, -10]    # 右球门下方
 
 # 音频设备配置
-device_id: 1                # 使用 BlackHole 16ch 设备
+device_id: 0                # 使用 BlackHole 16ch 设备
 sample_rate: 44100
 channels: 14                # 6个立体声轨道(12通道) + 2个球门麦克风
 chunk_duration: 0.1        # 采样时长（秒）
@@ -29,3 +29,9 @@ osc:
   ip: "127.0.0.1"          # Max/MSP默认监听本地地址
   port: 11111               # Max/MSP监听端口
   address: "/foosball_status"     # OSC地址
+
+# 位置估计独立OSC配置
+position_osc:
+  ip: "127.0.0.1"          # 位置估计OSC目标地址
+  port: 11112               # 位置估计独立端口
+  address: "/position"      # 位置估计OSC地址
