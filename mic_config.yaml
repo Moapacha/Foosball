@@ -1,5 +1,5 @@
 # 麦克风坐标配置（单位：厘米）
-# 使用BlackHole 16ch设备，但只使用前6个通道（对应6个麦克风）
+# 使用BlackHole 16ch设备，使用前14个通道（6个立体声轨道+2个球门麦克风）
 mics:
   - id: 0
     position: [0, 0]        # 左上角
@@ -13,15 +13,19 @@ mics:
     position: [58.5, 0]     # 上中点
   - id: 5
     position: [58.5, 68]    # 下中点
+  - id: 6
+    position: [0, -10]      # 左球门下方
+  - id: 7
+    position: [117, -10]    # 右球门下方
 
 # 音频设备配置
 device_id: 1                # 使用 BlackHole 16ch 设备
 sample_rate: 44100
-channels: 6                 # 只使用6个通道
+channels: 14                # 6个立体声轨道(12通道) + 2个球门麦克风
 chunk_duration: 0.1        # 采样时长（秒）
 
 # VCV Rack OSC配置
 osc:
-  ip: "127.0.0.1"          # VCV Rack默认监听本地地址
-  port: 7001               # cvOSCcv模块监听端口
-  address: "/position"     # OSC地址
+  ip: "127.0.0.1"          # Max/MSP默认监听本地地址
+  port: 11111               # Max/MSP监听端口
+  address: "/foosball_status"     # OSC地址
