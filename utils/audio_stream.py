@@ -14,3 +14,8 @@ class AudioStream:
                            channels=self.channels, device=self.device)
         sd.wait()
         return recording.T  # 转置为 (channels, samples)
+    
+    def close(self):
+        """关闭音频流"""
+        # sounddevice会自动管理资源，这里不需要特殊处理
+        pass

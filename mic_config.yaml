@@ -1,27 +1,29 @@
 # 麦克风坐标配置（单位：厘米）
-# 使用BlackHole 16ch设备，使用前14个通道（6个立体声轨道+2个球门麦克风）
+# 使用BlackHole 16ch设备，8轨输入布局：
+# 1左门，2右门，3左下，4左上，5中下，6中上，7右下，8右上
+# 坐标系：左下(0,0)，右上(117,68)
 mics:
   - id: 0
-    position: [0, 0]        # 左上角
+    position: [-10, 34]     # 左门 (通道1) - 进球检测
   - id: 1
-    position: [117, 0]      # 右上角
+    position: [127, 34]     # 右门 (通道2) - 进球检测
   - id: 2
-    position: [0, 68]       # 左下角
+    position: [0, 0]        # 左下 (通道3) - 蓝方
   - id: 3
-    position: [117, 68]     # 右下角
+    position: [0, 68]       # 左上 (通道4) - 蓝方
   - id: 4
-    position: [58.5, 0]     # 上中点
+    position: [58.5, 0]     # 中下 (通道5)
   - id: 5
-    position: [58.5, 68]    # 下中点
+    position: [58.5, 68]    # 中上 (通道6)
   - id: 6
-    position: [0, -10]      # 左球门下方
+    position: [117, 0]      # 右下 (通道7) - 红方
   - id: 7
-    position: [117, -10]    # 右球门下方
+    position: [117, 68]     # 右上 (通道8) - 红方
 
 # 音频设备配置
 device_id: 0                # 使用 BlackHole 16ch 设备
 sample_rate: 44100
-channels: 14                # 6个立体声轨道(12通道) + 2个球门麦克风
+channels: 16                # 使用16通道，但只处理1-8通道
 chunk_duration: 0.1        # 采样时长（秒）
 
 # VCV Rack OSC配置
@@ -33,5 +35,5 @@ osc:
 # 位置估计独立OSC配置
 position_osc:
   ip: "127.0.0.1"          # 位置估计OSC目标地址
-  port: 11112               # 位置估计独立端口
-  address: "/position"      # 位置估计OSC地址
+  port: 7777                # 位置估计独立端口
+  address: "/source/1/xyz"  # Spat Revolution位置估计OSC地址
