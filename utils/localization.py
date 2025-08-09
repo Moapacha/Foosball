@@ -154,8 +154,8 @@ def estimate_position_enhanced(rms_values, mic_positions, noise_threshold=0.01, 
     # 3. 计算加权位置
     weighted_pos = np.sum(valid_positions * weights[:, None], axis=0)
     
-    # 4. 确保位置在有效范围内（0-117, 0-68）
-    weighted_pos[0] = max(0, min(117, weighted_pos[0]))  # X坐标限制在0-117
+    # 4. 确保位置在有效范围内（-10到127, 0-68）
+    weighted_pos[0] = max(-10, min(127, weighted_pos[0]))  # X坐标限制在-10到127
     weighted_pos[1] = max(0, min(68, weighted_pos[1]))   # Y坐标限制在0-68
     
     # 5. 增强的左右平衡调整 - 确保x值在正负两侧平滑移动
@@ -196,10 +196,10 @@ def estimate_position_enhanced(rms_values, mic_positions, noise_threshold=0.01, 
         return center_pos
     
     # 7. 确保x值在合理范围内，避免过于集中在中心
-    if weighted_pos[0] < 20:
-        weighted_pos[0] = max(10, weighted_pos[0])  # 确保不会太靠左
-    elif weighted_pos[0] > 97:
-        weighted_pos[0] = min(107, weighted_pos[0])  # 确保不会太靠右
+    if weighted_pos[0] < 10:
+        weighted_pos[0] = max(-5, weighted_pos[0])  # 确保不会太靠左
+    elif weighted_pos[0] > 107:
+        weighted_pos[0] = min(122, weighted_pos[0])  # 确保不会太靠右
     
     return weighted_pos
 

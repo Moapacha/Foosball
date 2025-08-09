@@ -13,9 +13,10 @@ def load_config(path="mic_config.yaml"):
 def map_coordinates_to_osc_range(x, y):
     """
     将原始坐标映射到OSC范围（-1到1）
-    新坐标系: x: 0-117 -> -1到1, y: 0-68 -> -1到1
+    新坐标系: x: -10到127 -> -1到1, y: 0-68 -> -1到1
     """
-    x_mapped = 2.0 * float(x) / 117.0 - 1.0
+    # x坐标范围：-10到127，总范围137
+    x_mapped = 2.0 * (float(x) + 10.0) / 137.0 - 1.0
     y_mapped = 2.0 * float(y) / 68.0 - 1.0
     return x_mapped, y_mapped
 
