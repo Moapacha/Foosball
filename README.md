@@ -44,64 +44,21 @@ Ableton Live → BlackHole → Python → OSC → Max/MSP → MIDI → VCV Rack 
 
 ## Installation
 
-### Prerequisites
-
-- macOS (BlackHole supported)
-- Python 3.7+
-- BlackHole 16ch virtual audio device
-- Max/MSP
-- VCV Rack
-
-### 1. Install BlackHole
-
-```bash
-# Install BlackHole via Homebrew
-brew install blackhole-2ch
-
-# Or download from: https://github.com/ExistentialAudio/BlackHole
-```
-
-### 2. Install Python Dependencies
+Requires: macOS, Python 3.7+, BlackHole 16ch, Max/MSP, VCV Rack
 
 ```bash
 pip install numpy pyyaml python-osc pyaudio matplotlib
 ```
 
-### 3. Configure Audio Routing
-
-- **Ableton Live**: Set output device to BlackHole 16ch, ensure 8 channels are routed
-- **BlackHole**: Create 16-channel device, set sample rate to 44100 Hz
-- **Python**: Reads channels 1–8 from BlackHole
+Route Ableton output to BlackHole 16ch (8 channels). Edit `mic_config.yaml` for your setup.
 
 ## Quick Start
-
-### 1. Run the Main Program
 
 ```bash
 python main.py
 ```
 
-### 2. Start Max/MSP
-
-1. Open the Max/MSP patch
-2. Ensure OSC receivers are listening on ports **11111** and **7777**
-3. Configure MIDI output to VCV Rack
-
-### 3. Start VCV Rack
-
-1. Open VCV Rack
-2. Add the `midicctocv` module
-3. Configure MIDI input
-4. Connect CV outputs to target modules
-
-### 4. Run Tests (Optional)
-
-```bash
-python simulate_audio.py     # Audio simulation test
-python test_4channel.py      # System test
-python verify_config.py      # Configuration verification
-python visualize_layout_en.py # Layout visualization
-```
+Then run Max/MSP (OSC ports 11111, 7777 → MIDI) and VCV Rack with `midicctocv`.
 
 ## Configuration
 
@@ -122,16 +79,7 @@ Main configuration file: `mic_config.yaml`
 
 ### Coordinate System
 
-- Origin: bottom-left (0, 0)
-- Extent: top-right (117, 68)
-- Layout: Blue (left) vs Red (right)
-- Mapping: Raw coordinates map to -1…1 for Spat Revolution
-
-### Layout Reference
-
-- **Blue area**: x &lt; 58.5
-- **Red area**: x &gt; 58.5
-- **Center line**: x = 58.5
+Bottom-left (0, 0) to top-right (117, 68). Blue (x &lt; 58.5) vs Red (x &gt; 58.5).
 
 ## OSC Communication
 
@@ -179,35 +127,9 @@ Max/MSP receives OSC and maps to MIDI:
 
 ## Troubleshooting
 
-### BlackHole Not Detected
-
-- Confirm BlackHole is installed
-- Check audio device permissions
-
-### OSC Connection Fails
-
-- Ensure ports 11111 and 7777 are free
-- Verify Max/MSP is listening
-
-### MIDI Connection Issues
-
-- Check MIDI device setup
-- Verify VCV Rack MIDI input configuration
-
-### CV Signal Problems
-
-- Review `midicctocv` configuration
-- Confirm MIDI CC mapping
-
-### Debug Commands
-
-```bash
-# List audio devices
-python -c "import pyaudio; p = pyaudio.PyAudio(); print([p.get_device_info_by_index(i)['name'] for i in range(p.get_device_count())])"
-
-# Test OSC send
-python -c "from pythonosc import udp_client; c = udp_client.SimpleUDPClient('127.0.0.1', 11111); c.send_message('/test', [1, 2, 3])"
-```
+- **BlackHole**: Check install and audio device permissions
+- **OSC**: Ports 11111 and 7777 must be free; Max/MSP must be listening
+- **MIDI/CV**: Verify VCV Rack input and `midicctocv` mapping
 
 ## Technical Specifications
 
@@ -221,9 +143,3 @@ python -c "from pythonosc import udp_client; c = udp_client.SimpleUDPClient('127
 | CV range | 0–10V |
 | Input channels | 8 (on 16-channel device) |
 
-## Notes
-
-- BlackHole 16ch must be receiving audio from Ableton
-- Max/MSP must listen on 11111 (status) and 7777 (position)
-- Goal mics: channels 1–2; localization mics: channels 3–8
-- `midicctocv` converts 0–127 MIDI to 0–10V CV in VCV Rack
